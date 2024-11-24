@@ -1,0 +1,305 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>YouTube to MP3 Converter-Free</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- CDN Font Awesome -->
+        <link rel="icon" href="unnamed.webp" type="image/webp">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f7f7f7;
+                transition: background-color 0.3s, color 0.3s;
+            }
+        
+            header {
+                background-color: #007bff;
+                color: white;
+                padding: 20px;
+                text-align: center;
+            }
+        
+            main {
+                padding: 20px;
+                text-align: center;
+                position: relative; /* Agar elemen yang ditambahkan tidak menutupi seluruh halaman */
+            }
+        
+            input[type="url"], button {
+                padding: 10px;
+                margin: 10px 0;
+                font-size: 16px;
+                border: none;
+                border-radius: 5px;
+                width: 100%;
+                max-width: 400px;
+            }
+        
+            button {
+                background-color: #28a745;
+                color: white;
+                cursor: pointer;
+            }
+        
+            button:hover {
+                background-color: #218838;
+            }
+        
+            .info-text {
+                font-size: 16px;
+                color: #555;
+                margin-top: 20px;
+                text-align: left;
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        
+            .info-text b {
+                font-weight: bold;
+            }
+        
+            .steps {
+                text-align: left;
+                margin-top: 20px;
+                padding-left: 20px;
+                font-size: 16px;
+                list-style-type: decimal;
+            }
+        
+            .steps li {
+                margin-bottom: 10px;
+            }
+        
+            footer {
+                background-color: #f5f6f8;
+                color: rgb(12, 12, 12);
+                text-align: center;
+                padding: 10px;
+                width: 100%;
+                bottom: 0;
+            }
+        
+            /* Tema gelap */
+            body.dark-mode {
+                background-color: #2c3e50;
+                color: white;
+            }
+        
+            body.dark-mode header {
+                background-color: #34495e;
+            }
+        
+            body.dark-mode footer {
+                background-color: #34495e;
+                color: white;
+            }
+        
+            body.dark-mode .info-text {
+                color: #ffffff;
+            }
+        
+            /* Tombol untuk mengubah tema */
+            .theme-toggle-button {
+                background-color: #ffffff;
+                color: rgb(4, 4, 4);
+                border: none;
+                border-radius: 5px;
+                padding: 10px;
+                cursor: pointer;
+                margin-top: 20px;
+                width: auto;
+            }
+        
+            .theme-toggle-button:hover {
+                background-color: #7c7676;
+            }
+        
+            /* Perbaikan untuk pesan konversi dan kontainer */
+            #message {
+                font-size: 1.5em;
+                font-weight: bold;
+                text-align: center;
+                margin-bottom: 20px;
+                display: block;
+            }
+        
+            .result-container {
+                margin-top: 20px;
+                border: 2px solid #28a745;
+                padding: 20px;
+                background-color: #f0f8ff;
+                text-align: center;
+                width: auto;
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        
+            .result-container h2 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+                color: black;
+            }
+        
+            .result-container img {
+                margin-top: 15px;
+                max-width: 100%;
+                height: auto;
+                margin-bottom: 20px;
+            }
+        
+            .result-container button {
+                font-size: 1.2em;
+                padding: 10px 20px;
+                cursor: pointer;
+                background-color: #28a745;
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>YouTube to MP3 Converter Free</h1>
+            <button class="theme-toggle-button" id="themeToggle">
+                <i class="fas fa-sun"></i> <!-- Ikon Matahari untuk Light Mode -->
+            </button>
+        </header>
+
+        <main>
+            <form id="convertForm">
+                <label for="url">Harap masukkan URL video YouTube</label><br>
+                <input type="url" id="url" placeholder="Contoh: https://youtu.be/DdOnFb-rqSY" required>
+                <br>
+                <button type="submit">Convert</button>
+            </form>
+
+            <!-- Menambahkan elemen untuk pesan status -->
+            <p id="message"></p> 
+            <br>
+            <br>
+            <div class="info-text">
+                <h3>Langkah-langkah:</h3>
+                <ol class="steps">
+                    <li>Buka youtube.com.</li>
+                    <li>Salin URL video dari video yang ingin Anda konversi dan tempel ke konverter kami.</li>
+                    <li>Segera setelah konversi selesai, Anda dapat mengunduh berkas dengan mengklik tombol unduh.</li>
+                </ol>
+                <p>Selamat menikmati! Kami harap Anda menyukai layanan kami.</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>© youtbmp3 2024</p>
+        </footer>
+        
+        <script>
+    const form = document.getElementById('convertForm');
+    const message = document.getElementById('message'); // Pastikan elemen ini ada
+    const mainContent = document.querySelector('main');  // Menyimpan elemen main untuk menambahkan konten di bawahnya
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        message.textContent = "Processing... harap tunggu sebentar!";
+
+        const url = document.getElementById('url').value;
+
+        try {
+            const videoId = extractVideoId(url);
+            if (!videoId) {
+                throw new Error('Invalid YouTube URL');
+            }
+            const videoTitle = await getVideoTitle(videoId);
+
+            const response = await fetch('http://localhost:5000/convert', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url }),
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const downloadUrl = window.URL.createObjectURL(blob);
+
+                message.innerHTML = "Conversion complete!<br>"; // Pesan selesai
+                message.style.textAlign = 'center';
+                message.style.fontSize = '1.5em';
+                message.style.fontWeight = 'bold';
+                message.style.marginBottom = '20px';
+
+                // Membuat container untuk hasil konversi
+                const resultContainer = document.createElement('div');
+                resultContainer.classList.add('result-container');
+
+                const titleElement = document.createElement('h2');
+                titleElement.textContent = `Judul: ${videoTitle}`;
+                resultContainer.appendChild(titleElement);
+
+                const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                const thumbnailElement = document.createElement('img');
+                thumbnailElement.src = thumbnailUrl;
+                thumbnailElement.alt = 'Video Thumbnail';
+                resultContainer.appendChild(thumbnailElement);
+
+                const downloadButton = document.createElement('button');
+                downloadButton.textContent = 'Download Converted MP3';
+                downloadButton.onclick = function () {
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = `${videoTitle}.mp3`;
+                    a.click();
+                };
+                resultContainer.appendChild(downloadButton);
+
+                // Menambahkan container hasil konversi ke pesan
+                message.appendChild(resultContainer);
+            } else {
+                const error = await response.json();
+                message.textContent = `Error: ${error.error}`;
+            }
+        } catch (err) {
+            message.textContent = `Error: ${err.message}`;
+        }
+    });
+
+    // Fungsi untuk mengekstrak ID video dari URL YouTube
+    function extractVideoId(url) {
+        const regExp = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+        const match = url.match(regExp);
+        return match ? match[1] : null;
+    }
+
+    // Fungsi untuk mendapatkan judul video YouTube menggunakan API YouTube
+    async function getVideoTitle(videoId) {
+        const apiKey = 'AIzaSyDCx7mbTyF9EupaTL6W67GzjAudHejz290';  // Ganti dengan API Key Anda
+        const apiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet`;
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        if (data.items && data.items.length > 0) {
+            return data.items[0].snippet.title;  // Mengambil judul video dari API
+        } else {
+            throw new Error('Video title not found.');
+        }
+    }
+
+        // Mengubah tema saat tombol diklik
+        const themeToggleButton = document.getElementById('themeToggle');
+            themeToggleButton.addEventListener('click', function () {
+                document.body.classList.toggle('dark-mode');  // Menambahkan atau menghapus kelas dark-mode
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                if (isDarkMode) {
+                    themeToggleButton.innerHTML = '<i class="fas fa-moon"></i>'; // Ikon Bulan untuk Dark Mode
+                } else {
+                    themeToggleButton.innerHTML = '<i class="fas fa-sun"></i>'; // Ikon Matahari untuk Light Mode
+                }
+            });
+        </script>
+        
+    </body>
+    </html>

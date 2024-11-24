@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Video YouTube</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            text-align: center;
+        }
+        select, button, input {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Download Video YouTube</h1>
+    </header>
+    <form id="downloadForm">
+        <label for="videoUrl">Masukkan URL Video YouTube:</label><br>
+        <input type="url" id="videoUrl" placeholder="Contoh: https://youtu.be/DdOnFb-rqSY" required>
+        <br>
+        <label for="resolution">Pilih Resolusi:</label><br>
+        <select id="resolution">
+            <option value="140p">140p</option>
+            <option value="360p">360p</option>
+            <option value="720p">720p</option>
+            <option value="1080p">1080p</option>
+        </select>
+        <br>
+        <button type="submit">Download Video</button>
+    </form>
+    <p id="statusMessage" style="text-align: center; margin-top: 20px;"></p>
+
+    <script>
+        const form = document.getElementById('downloadForm');
+        const statusMessage = document.getElementById('statusMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('videoUrl').value.trim();
+            const resolution = document.getElementById('resolution').value;
+
+            if (!url) {
+                statusMessage.textContent = "URL tidak boleh kosong.";
+                return;
+            }
+
+            statusMessage.textContent = "Processing... Harap tunggu.";
+
+            try {
+                const response = await fetch('http://localhost:5000/download', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url, resolution })
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = `YouTube_Video_${resolution}.mp4`;
+                    a.click();
+                    statusMessage.textContent = "Download berhasil!";
+                } else {
+                    const error = await response.json();
+                    statusMessage.textContent = `Error: ${error.message}`;
+                }
+            } catch (error) {
+                statusMessage.textContent = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
